@@ -34,7 +34,9 @@ cd $BUILD_DIR
 pwd
 {
 printf "<!DOCTYPE html>\n<html>\n<body>\n"
-printf "<h1>Octave ${BRANCH} (HG_ID: ${HG_ID}) $NOW</h1>\n"
+printf "<h1>Octave ${BRANCH} (HG_ID: "
+printf "<a href=\"https://hg.savannah.gnu.org/hgweb/octave/rev/${HG_ID}\">${HG_ID}</a>"
+printf ") $NOW</h1>\n"
 
 printf "<details><summary>configure</summary>\n"
 printf "<pre>\n"
@@ -68,4 +70,20 @@ printf "</body>\n</html>\n"
 # export relevant artifacts
 #
 
-# TODO
+cd $BUILD_DIR/doc
+zip -r doxygen.zip doxyhtml
+cd $BUILD_DIR/doc/interpreter
+zip -r manual.zip octave.html
+cd $BUILD_DIR
+
+EXPORT_DIR=$OCD_EXPORTS_DIR/${BRANCH}_${HG_ID}
+mkdir -p $EXPORT_DIR
+
+cp -t $EXPORT_DIR            \
+  $LOG_FILE                  \
+  octave-*.tar.*             \
+  doc/doxyhtml.zip           \
+  doc/interpreter/manual.zip \
+  doc/interpreter/octave.pdf
+
+cd $OCD_ROOT
