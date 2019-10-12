@@ -82,7 +82,7 @@ mkdir -p $EXPORT_DIR
 cp -t $EXPORT_DIR            \
   $LOG_FILE                  \
   octave-*.tar.*             \
-  doc/doxyhtml.zip           \
+  doc/doxygen.zip            \
   doc/interpreter/manual.zip \
   doc/interpreter/octave.pdf
 
