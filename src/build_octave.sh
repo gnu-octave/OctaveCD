@@ -53,7 +53,6 @@ else
   mkdir -p $BUILD_DIR
 
   cd $BUILD_DIR
-  pwd
   {
   printf "<!DOCTYPE html>\n<html>\n<body>\n"
   printf "<h1>Octave ${BRANCH}</h1>\n"
@@ -63,7 +62,7 @@ else
 
   printf "<details><summary>configure</summary>\n"
   printf "<pre>\n"
-  $OCD_REPO_DIR/$BRANCH/configure
+  ${OCD_REPO_DIR}/$BRANCH/configure
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make</summary>\n"
@@ -107,9 +106,6 @@ fi
 if [ -d "$EXPORT_DIR" ]; then
   echo "Do not export Octave ${BRANCH} again."
 else
-  TIME_START=$(date --utc +"%F %H-%M-%S (UTC)")
-  REPO_URL=https://hg.savannah.gnu.org/hgweb/octave/rev
-
   mkdir -p $EXPORT_DIR
 
   cd $BUILD_DIR
