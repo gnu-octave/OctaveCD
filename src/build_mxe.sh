@@ -40,7 +40,7 @@ EOF
 
 if [[ ${MXE_CONFIG} == "w64" ]];
 then
-  # Do nothing.
+  MXE_CONFIG_OPTS=${MXE_CONFIG_OPTS}
 elif [[ ${MXE_CONFIG} == "w64-64" ]];
 then
   MXE_CONFIG_OPTS="${MXE_CONFIG_OPTS} --enable-fortran-int64"
