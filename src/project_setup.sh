@@ -12,6 +12,7 @@ export OCD_BUILD_DIR=$OCD_ROOT/build
 export OCD_EXPORTS_DIR=$OCD_ROOT/exports
 
 export OCD_REPO_DIR=$OCD_ROOT/repo
+export OCD_MXE_PKG_DIR=$OCD_REPO_DIR/mxe_pkg
 export OCD_REMOTES_DIR=$OCD_REPO_DIR/remotes
 export OCD_PATCHES_DIR=$OCD_REPO_DIR/patches
 

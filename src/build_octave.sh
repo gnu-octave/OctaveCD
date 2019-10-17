@@ -22,6 +22,20 @@ hg purge
 HG_ID=$(hg identify --id)
 OCT_VER=$(grep -e "^AC_INIT" configure.ac | grep -e "[0-9]\.[0-9]\.[0-9]" -o)
 
+# save HG_ID and Octave version globally
+if [[ $BRANCH == "stable" ]];
+then
+  export OCD_STABLE_HG_ID=$HG_ID
+  export OCD_STABLE_OCT_VER=$OCT_VER
+elif [[ $BRANCH == "default" ]];
+then
+  export OCD_DEFAULT_HG_ID=$HG_ID
+  export OCD_DEFAULT_OCT_VER=$OCT_VER
+else
+  echo "ERROR (build_octave.sh): Bad branch name \"${BRANCH}\" given."
+  exit -1
+fi
+
 BUILD_DIR=$OCD_BUILD_DIR/${BRANCH}_${HG_ID}
 EXPORT_DIR=$OCD_EXPORTS_DIR/${BRANCH}_${HG_ID}
 LOG_FILE=$BUILD_DIR/build.log.html
@@ -101,13 +115,14 @@ else
   cd $BUILD_DIR
   cp -t $EXPORT_DIR            \
     $LOG_FILE                  \
-    octave-*.tar.*             \
+    octave-${OCT_VER}.tar.gz   \
+    octave-${OCT_VER}.tar.lz   \
+    octave-${OCT_VER}.tar.xz   \
     doc/doxygen.zip            \
     doc/interpreter/manual.zip \
     doc/interpreter/octave.pdf
-  printf "${HG_ID}\n${OCT_VER}\n" > $EXPORT_DIR/meta.txt
-  cd $EXPORT_DIR
-  ln -s ${BRANCH}_${HG_ID} ${BRANCH}
+  cp -t $OCD_MXE_PKG_DIR       \
+    octave-${OCT_VER}.tar.lz
 fi
 
 cd $OCD_ROOT
