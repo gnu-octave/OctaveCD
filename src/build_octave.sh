@@ -105,7 +105,9 @@ else
     doc/doxygen.zip            \
     doc/interpreter/manual.zip \
     doc/interpreter/octave.pdf
-  printf "${HG_ID}\n${OCT_VER}" > $EXPORT_DIR/meta.txt
+  printf "${HG_ID}\n${OCT_VER}\n" > $EXPORT_DIR/meta.txt
+  cd $EXPORT_DIR
+  ln -s ${BRANCH}_${HG_ID} ${BRANCH}
 fi
 
 cd $OCD_ROOT
