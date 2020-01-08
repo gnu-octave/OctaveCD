@@ -23,6 +23,7 @@ cd $OCD_ROOT
 mkdir -p            \
   $OCD_BUILD_DIR    \
   $OCD_EXPORTS_DIR  \
+  $OCD_MXE_PKG_DIR  \
   $OCD_REMOTES_DIR
 
 
