@@ -10,17 +10,20 @@ fi
 BRANCH=$1
 
 #
-# update the branch
+# create a fresh local clone
 #
 
-cd $OCD_REPO_DIR/$BRANCH
-hg pull
-hg update --clean $BRANCH
-hg purge
-./bootstrap
+cd $OCD_BUILD_DIR
+hg clone $OCD_REMOTES_DIR/octave $BRANCH
+cd $OCD_BUILD_DIR/${BRANCH}
+hg update $BRANCH
+
+#
+# identify the HD ID
+#
 
 HG_ID=$(hg identify --id)
-OCT_VER=$(grep -e "^AC_INIT" configure.ac | grep -e "[0-9]\.[0-9]\.[0-9]" -o)
+OCT_VER=$(grep -e "^AC_INIT" configure.ac | grep -Po "(\d+\.)+\d+")
 
 # save HG_ID and Octave version globally
 if [[ $BRANCH == "stable" ]];
@@ -46,11 +49,12 @@ LOG_FILE=$BUILD_DIR/build.log.html
 
 if [ -d "$BUILD_DIR" ]; then
   echo "Do not build Octave ${BRANCH} again."
+  rm -Rf $OCD_BUILD_DIR/${BRANCH}
 else
   TIME_START=$(date --utc +"%F %H-%M-%S (UTC)")
   REPO_URL=https://hg.savannah.gnu.org/hgweb/octave/rev
 
-  mkdir -p $BUILD_DIR
+  mv $OCD_BUILD_DIR/${BRANCH} $BUILD_DIR
 
   cd $BUILD_DIR
   {
@@ -60,9 +64,14 @@ else
   printf "<a href=\"${REPO_URL}/${HG_ID}\">${HG_ID}</a>"
   printf "</li>\n<li>Start: ${TIME_START}</li>\n</ul>\n"
 
+  printf "<details><summary>bootstrap</summary>\n"
+  printf "<pre>\n"
+  ./bootstrap
+  printf "</pre>\n</details>\n"
+
   printf "<details><summary>configure</summary>\n"
   printf "<pre>\n"
-  ${OCD_REPO_DIR}/$BRANCH/configure
+  ./configure
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make</summary>\n"
@@ -117,6 +126,7 @@ else
     doc/doxygen.zip            \
     doc/interpreter/manual.zip \
     doc/interpreter/octave.pdf
+  rm -f $OCD_MXE_PKG_DIR/octave-${OCT_VER}.tar.lz
   cp -t $OCD_MXE_PKG_DIR       \
     octave-${OCT_VER}.tar.lz
 fi

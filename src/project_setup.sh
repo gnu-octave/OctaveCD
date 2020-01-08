@@ -14,7 +14,6 @@ export OCD_EXPORTS_DIR=$OCD_ROOT/exports
 export OCD_REPO_DIR=$OCD_ROOT/repo
 export OCD_MXE_PKG_DIR=$OCD_REPO_DIR/mxe_pkg
 export OCD_REMOTES_DIR=$OCD_REPO_DIR/remotes
-export OCD_PATCHES_DIR=$OCD_REPO_DIR/patches
 
 #
 # ensure paths exist
@@ -24,8 +23,7 @@ cd $OCD_ROOT
 mkdir -p            \
   $OCD_BUILD_DIR    \
   $OCD_EXPORTS_DIR  \
-  $OCD_REMOTES_DIR  \
-  $OCD_PATCHES_DIR
+  $OCD_REMOTES_DIR
 
 
 #
@@ -40,16 +38,6 @@ fi
 if [ ! -d "$OCD_REMOTES_DIR/mxe-octave" ]; then
   cd $OCD_REMOTES_DIR
   hg clone https://hg.octave.org/mxe-octave
-fi
-
-if [ ! -d "$OCD_REPO_DIR/stable" ]; then
-  cd $OCD_REPO_DIR
-  hg clone $OCD_REMOTES_DIR/octave stable
-fi
-
-if [ ! -d "$OCD_REPO_DIR/default" ]; then
-  cd $OCD_REPO_DIR
-  hg clone $OCD_REMOTES_DIR/octave default
 fi
 
 if [ ! -d "$OCD_REPO_DIR/mxe" ]; then
