@@ -8,4 +8,7 @@ hg pull
 cd $OCD_REMOTES_DIR/mxe-octave
 hg pull
 
+cd $OCD_GNULIB_DIR
+git fetch
+
 cd $OCD_ROOT

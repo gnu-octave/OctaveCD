@@ -66,7 +66,7 @@ else
 
   printf "<details><summary>bootstrap</summary>\n"
   printf "<pre>\n"
-  ./bootstrap
+  ./bootstrap --gnulib-srcdir=${OCD_GNULIB_DIR}
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>configure</summary>\n"
