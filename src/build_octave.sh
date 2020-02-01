@@ -16,11 +16,18 @@ BRANCH=$1
 cd $OCD_BUILD_DIR
 hg clone $OCD_REMOTES_DIR/octave $BRANCH
 cd $OCD_BUILD_DIR/${BRANCH}
-hg update $BRANCH
+
+# Update to tag/revision or to top op branch
+if [ $# -eq 2 ]; then
+  hg update $2
+else
+  hg update $BRANCH
+fi
 
 #
 # identify the HD ID
 #
+
 
 HG_ID=$(hg identify --id)
 OCT_VER=$(grep -e "^AC_INIT" configure.ac | grep -Po "(\d+\.)+\d+")
