@@ -27,6 +27,11 @@ mkdir -p            \
   $OCD_MXE_PKG_DIR  \
   $OCD_REMOTES_DIR
 
+#
+# Check for X display (TODO), otherwise use "xvfb-run"
+#
+
+export MAKE=xvfb-run -a make
 
 #
 # ensure repositories exist

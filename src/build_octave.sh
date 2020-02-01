@@ -76,22 +76,22 @@ else
 
   printf "<details><summary>make</summary>\n"
   printf "<pre>\n"
-  make
+  $MAKE
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make check</summary>\n"
   printf "<pre>\n"
-  make check
+  $MAKE check
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make dist</summary>\n"
   printf "<pre>\n"
-  make dist
+  $MAKE dist
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make doxyhtml</summary>\n"
   printf "<pre>\n"
-  make doxyhtml
+  $MAKE doxyhtml
   printf "</pre>\n</details>\n"
 
   TIME_END=$(date --utc +"%F %H-%M-%S (UTC)")

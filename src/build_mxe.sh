@@ -80,7 +80,7 @@ printf "</pre>\n</details>\n"
 
 printf "<details><summary>make</summary>\n"
 printf "<pre>\n"
-make JOBS=4 all nsis-installer 7z-dist zip-dist
+$MAKE JOBS=4 all nsis-installer 7z-dist zip-dist
 printf "</pre>\n</details>\n"
 
 TIME_END=$(date --utc +"%F %H-%M-%S (UTC)")
