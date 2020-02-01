@@ -31,7 +31,7 @@ mkdir -p            \
 # Check for X display (TODO), otherwise use "xvfb-run"
 #
 
-export MAKE=xvfb-run -a make
+export MAKE="xvfb-run -a make"
 
 #
 # ensure repositories exist
