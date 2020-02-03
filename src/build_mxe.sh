@@ -19,6 +19,14 @@ hg pull
 hg update --clean
 hg purge
 
+#
+# Update to tag/revision or stay at top of branch
+#
+
+if [ $# -eq 3 ]; then
+  hg update $3
+fi
+
 if [[ $BRANCH == "stable" ]];
 then
   HG_ID=$OCD_STABLE_HG_ID
