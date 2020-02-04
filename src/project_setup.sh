@@ -32,6 +32,7 @@ mkdir -p            \
 #
 
 #TODO: export MAKE="xvfb-run -a make"
+export MAKE=make
 
 #
 # ensure repositories exist
