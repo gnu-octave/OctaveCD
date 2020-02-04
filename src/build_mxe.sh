@@ -27,7 +27,7 @@ if [ $# -eq 3 ]; then
   hg update $3
 fi
 
-if [[ $BRANCH == "stable" ]];
+if [[ $BRANCH == "stable" ]] || [[ $BRANCH == "release" ]];
 then
   HG_ID=$OCD_STABLE_HG_ID
 elif [[ $BRANCH == "default" ]];
@@ -60,7 +60,12 @@ else
   exit -1
 fi
 
-BUILD_DIR=$OCD_BUILD_DIR/mxe_${BRANCH}_${MXE_CONFIG}
+if [[ $BRANCH == "release" ]];
+then
+  BUILD_DIR=/release/mxe_${MXE_CONFIG}
+else
+  BUILD_DIR=$OCD_BUILD_DIR/mxe_${BRANCH}_${MXE_CONFIG}
+fi
 EXPORT_DIR=$OCD_EXPORTS_DIR/${BRANCH}_${HG_ID}
 LOG_FILE=$BUILD_DIR/build_mxe_${MXE_CONFIG}.log.html
 
