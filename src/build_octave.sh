@@ -1,74 +1,80 @@
 #!/bin/sh
 
+# Exit when any command fails.
+set -e
+
 # Build a clean version of the given branch.
 
-if [ $# -eq 0 ]; then
-  echo "ERROR (build_octave.sh): No branch given."
+if [ $# -eq 0 ];
+then
+  echo "ERROR (build_octave.sh): No changeset given."
   exit -1
 fi
 
-BRANCH=$1
+CHANGESET=$1
 
 #
-# create a fresh local clone
+# Create a fresh local clone.
 #
 
 cd $OCD_BUILD_DIR
-hg clone $OCD_REMOTES_DIR/octave $BRANCH
-cd $OCD_BUILD_DIR/${BRANCH}
+hg clone $OCD_REMOTES_DIR/octave $CHANGESET
+cd $OCD_BUILD_DIR/${CHANGESET}
 
 #
-# Update to tag/revision or to top op branch
+# Update fresh local clone to changeset.  If invalid the script will fail here.
 #
 
-if [ $# -eq 2 ]; then
-  hg update $2
-else
-  hg update $BRANCH
-fi
+hg update $CHANGESET
 
 #
-# identify the HD ID
+# Identify the HD ID.
 #
 
 HG_ID=$(hg identify --id)
 OCT_VER=$(grep -e "^AC_INIT" configure.ac | grep -Po "(\d+\.)+\d+")
 
-# save HG_ID and Octave version globally
-if [[ $BRANCH == "stable" ]];
+#
+# Save HG_ID and Octave version globally.
+#
+
+if [[ $CHANGESET == "stable" ]];
 then
   export OCD_STABLE_HG_ID=$HG_ID
   export OCD_STABLE_OCT_VER=$OCT_VER
-elif [[ $BRANCH == "default" ]];
+  BUILD_DIR=$OCD_BUILD_DIR/${CHANGESET}_${HG_ID}
+  EXPORT_DIR=$OCD_EXPORTS_DIR/${CHANGESET}_${HG_ID}
+elif [[ $CHANGESET == "default" ]];
 then
   export OCD_DEFAULT_HG_ID=$HG_ID
   export OCD_DEFAULT_OCT_VER=$OCT_VER
+  BUILD_DIR=$OCD_BUILD_DIR/${CHANGESET}_${HG_ID}
+  EXPORT_DIR=$OCD_EXPORTS_DIR/${CHANGESET}_${HG_ID}
 else
-  echo "ERROR (build_octave.sh): Bad branch name \"${BRANCH}\" given."
-  exit -1
+  BUILD_DIR=$OCD_BUILD_DIR/${OCT_VER}
+  EXPORT_DIR=$OCD_EXPORTS_DIR/${OCT_VER}
 fi
 
-BUILD_DIR=$OCD_BUILD_DIR/${BRANCH}_${HG_ID}
-EXPORT_DIR=$OCD_EXPORTS_DIR/${BRANCH}_${HG_ID}
 LOG_FILE=$BUILD_DIR/build.log.html
 
 #
 # build the branch
 #
 
-if [ -d "$BUILD_DIR" ]; then
-  echo "Do not build Octave ${BRANCH} again."
-  rm -Rf $OCD_BUILD_DIR/${BRANCH}
+if [ -d "$BUILD_DIR" ];
+then
+  echo "  --> Do not build Octave ${CHANGESET} again."
+  rm -Rf $OCD_BUILD_DIR/${CHANGESET}
 else
   TIME_START=$(date --utc +"%F %H-%M-%S (UTC)")
   REPO_URL=https://hg.savannah.gnu.org/hgweb/octave/rev
 
-  mv $OCD_BUILD_DIR/${BRANCH} $BUILD_DIR
+  mv $OCD_BUILD_DIR/${CHANGESET} $BUILD_DIR
 
   cd $BUILD_DIR
   {
   printf "<!DOCTYPE html>\n<html>\n<body>\n"
-  printf "<h1>Octave ${BRANCH}</h1>\n"
+  printf "<h1>Octave ${CHANGESET}</h1>\n"
   printf "<ul>\n<li>HG_ID: "
   printf "<a href=\"${REPO_URL}/${HG_ID}\">${HG_ID}</a>"
   printf "</li>\n<li>Start: ${TIME_START}</li>\n</ul>\n"
@@ -85,22 +91,22 @@ else
 
   printf "<details><summary>make</summary>\n"
   printf "<pre>\n"
-  $MAKE
+  make
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make check</summary>\n"
   printf "<pre>\n"
-  $MAKE check
+  make check
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make dist</summary>\n"
   printf "<pre>\n"
-  $MAKE dist
+  make dist
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make doxyhtml</summary>\n"
   printf "<pre>\n"
-  $MAKE doxyhtml
+  make doxyhtml
   printf "</pre>\n</details>\n"
 
   TIME_END=$(date --utc +"%F %H-%M-%S (UTC)")
@@ -121,8 +127,9 @@ fi
 # export relevant artifacts
 #
 
-if [ -d "$EXPORT_DIR" ]; then
-  echo "Do not export Octave ${BRANCH} again."
+if [ -d "$EXPORT_DIR" ];
+then
+  echo "  --> Do not export Octave ${CHANGESET} again."
 else
   mkdir -p $EXPORT_DIR
 
@@ -135,9 +142,11 @@ else
     doc/doxygen.zip            \
     doc/interpreter/manual.zip \
     doc/interpreter/octave.pdf
-  rm -f $OCD_MXE_PKG_DIR/octave-${OCT_VER}.tar.lz
-  cp -t $OCD_MXE_PKG_DIR       \
-    octave-${OCT_VER}.tar.lz
+  if [[ $CHANGESET == "stable" ]] || [[ $CHANGESET == "default" ]];
+  then
+    rm -f $OCD_MXE_PKG_DIR/octave-${OCT_VER}.tar.lz
+    cp -t $OCD_MXE_PKG_DIR octave-${OCT_VER}.tar.lz
+  fi
 fi
 
 cd $OCD_ROOT

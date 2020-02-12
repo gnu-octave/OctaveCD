@@ -8,9 +8,13 @@ if [ -z "$OCD_ROOT" ]; then
   exit 0
 fi
 
-export OCD_BUILD_DIR=$OCD_ROOT/build
-export OCD_EXPORTS_DIR=$OCD_ROOT/exports
+export OCD_BUILD_DIR=/release
+if [ ! -w "$OCD_BUILD_DIR" ]; then
+  echo "ERROR (project_setup.sh): $OCD_BUILD_DIR not existing or not writable."
+  exit 0
+fi
 
+export OCD_EXPORTS_DIR=$OCD_ROOT/exports
 export OCD_REPO_DIR=$OCD_ROOT/repo
 export OCD_MXE_PKG_DIR=$OCD_REPO_DIR/mxe_pkg
 export OCD_REMOTES_DIR=$OCD_REPO_DIR/remotes
@@ -22,17 +26,9 @@ export OCD_GNULIB_DIR=$OCD_REMOTES_DIR/gnulib
 
 cd $OCD_ROOT
 mkdir -p            \
-  $OCD_BUILD_DIR    \
   $OCD_EXPORTS_DIR  \
   $OCD_MXE_PKG_DIR  \
   $OCD_REMOTES_DIR
-
-#
-#TODO: Check for X display, otherwise use "xvfb-run"
-#
-
-#TODO: export MAKE="xvfb-run -a make"
-export MAKE=make
 
 #
 # ensure repositories exist
