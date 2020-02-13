@@ -52,7 +52,6 @@ fi
 if [ ! -d "$OCD_REPO_DIR/mxe" ]; then
   cd $OCD_REPO_DIR
   hg clone $OCD_REMOTES_DIR/mxe-octave mxe
-  ./bootstrap
 fi
 
 cd $OCD_ROOT

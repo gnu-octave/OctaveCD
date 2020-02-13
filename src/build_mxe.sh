@@ -32,6 +32,7 @@ cd $OCD_REPO_DIR/mxe
 hg clean --all
 hg pull
 hg update $MXE_CHANGESET
+./bootstrap
 
 #
 # Identify the HD ID.
@@ -53,7 +54,7 @@ else
   exit -1
 fi
 
-read -d '' MXE_CONFIG_OPTS << EOF
+read -d '' MXE_CONFIG_OPTS << EOF || :
 --enable-devel-tools              \
 --enable-binary-packages          \
 --with-ccache                     \
