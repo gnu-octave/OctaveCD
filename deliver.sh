@@ -7,7 +7,7 @@ export OCD_ROOT=$(pwd)
 source src/project_setup.sh
 source src/update_remotes.sh
 
-source src/build_octave.sh release-5-2-0
+# source src/build_octave.sh release-5-2-0
 # source src/build_mxe.sh    release w64    octave-release-5.2.0
 # source src/build_mxe.sh    release w64-64 octave-release-5.2.0
 # source src/build_mxe.sh    release w32    octave-release-5.2.0

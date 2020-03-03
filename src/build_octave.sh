@@ -91,7 +91,10 @@ else
 
   printf "<details><summary>make</summary>\n"
   printf "<pre>\n"
-  make
+  # https://savannah.gnu.org/bugs/?56952
+  until make -j4; do
+    echo "make invocation."
+  done
   printf "</pre>\n</details>\n"
 
   printf "<details><summary>make check</summary>\n"
