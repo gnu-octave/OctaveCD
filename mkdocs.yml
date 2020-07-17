@@ -1,4 +1,0 @@
-site_name: GNU Octave continuous delivery
-nav:
-    - top: index.md
-theme: readthedocs
